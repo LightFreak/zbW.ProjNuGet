@@ -22,7 +22,7 @@ namespace zbW.ProjNuGet.Connection
                 con.Open();
                 //----- SQL-Kommando aufbauen
                 IDbCommand cmd = con.CreateCommand();
-                cmd.CommandText = "call LogMessageAdd('" + date + "','" + entry.hostname + "'," + entry.severity + ",'" + entry.message + "')";
+                cmd.CommandText = "call LogMessageAdd('" + date + "','" + entry.hostname + "'," + entry.severity + ",'" + entry.message + "');";
                 //----- SQL-Kommando ausführen; liefert einen OleDbDataReader
                 cmd.ExecuteNonQuery();
                 
@@ -63,7 +63,7 @@ namespace zbW.ProjNuGet.Connection
                 IDbCommand cmd = con.CreateCommand();
                 foreach (int i in id)
                 {
-                    cmd.CommandText = "call LogClear(" + i + ")";
+                    cmd.CommandText = "call LogClear(" + i + ");";
                     //----- SQL-Kommando ausführen; liefert einen OleDbDataReader
                     cmd.ExecuteNonQuery();
                 }
@@ -105,7 +105,7 @@ namespace zbW.ProjNuGet.Connection
                 con.Open();
                 //----- SQL-Kommando aufbauen
                 IDbCommand cmd = con.CreateCommand();
-                cmd.CommandText = "SELECT id,pod,location,hostname,severity,timestamp,message FROM v_logentries order by timestamp";
+                cmd.CommandText = "SELECT id,pod,location,hostname,severity,timestamp,message FROM v_logentries order by timestamp;";
                 //----- SQL-Kommando ausführen; liefert einen OleDbDataReader
                 IDataReader reader = cmd.ExecuteReader();
 
