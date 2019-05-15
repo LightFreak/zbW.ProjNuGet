@@ -51,7 +51,7 @@ namespace zbW.ProjNuGet.Connection
             }
         }
 
-        public void ConfirmEntry(List<string> id, String connection)
+        public void ConfirmEntry(List<int> id, String connection)
         {
             
             IDbConnection con = null; // Verbindung deklarieren
@@ -61,7 +61,7 @@ namespace zbW.ProjNuGet.Connection
                 con.Open();
                 //----- SQL-Kommando aufbauen
                 IDbCommand cmd = con.CreateCommand();
-                foreach (string i in id)
+                foreach (int i in id)
                 {
                     cmd.CommandText = "call LogClear(" + i + ")";
                     //----- SQL-Kommando ausführen; liefert einen OleDbDataReader
@@ -116,7 +116,7 @@ namespace zbW.ProjNuGet.Connection
                 {
                     // solange noch Daten vorhanden sind
                     int cols = reader.GetValues(dataRow); // tatsächliches Lesen 
-                    var curEntry = new Entry((string)reader["id"], (string)reader["pod"], (string)reader["location"], (string)reader["hostname"], (int)reader["severity"], (DateTime)reader["timestamp"], (string)reader["message"]);
+                    var curEntry = new Entry((int)reader["id"], (string)reader["pod"], (string)reader["location"], (string)reader["hostname"], (int)reader["severity"], (DateTime)reader["timestamp"], (string)reader["message"]);
                     result.Add(curEntry);
                 }
 

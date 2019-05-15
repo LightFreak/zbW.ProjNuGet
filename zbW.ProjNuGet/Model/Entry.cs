@@ -5,7 +5,7 @@ namespace zbW.ProjNuGet
 {
     class Entry : IEntity
     {
-        public String id { get; set; }
+        public int id { get; set; }
         public String pod { get; set; }
         public String location { get; set; }
         public String hostname { get; set; }
@@ -14,7 +14,7 @@ namespace zbW.ProjNuGet
         public String message { get; set; }
         public bool confirm { get; set; }
 
-        public Entry(String id, string pod, string location, string hostname,
+        public Entry(int id, string pod, string location, string hostname,
             int severity, DateTime timestamp, string message)
         {
             this.id = id;
@@ -29,7 +29,7 @@ namespace zbW.ProjNuGet
 
         public Entry()
         {
-            this.id = "";
+            this.id = 0;
             this.pod = "";
             this.location = "";
             this.hostname = "" ;
