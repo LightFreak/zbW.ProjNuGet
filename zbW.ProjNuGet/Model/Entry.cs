@@ -5,26 +5,87 @@ namespace zbW.ProjNuGet
 {
     class Entry : IEntity
     {
-        public int id { get; set; }
-        public String pod { get; set; }
-        public String location { get; set; }
-        public String hostname { get; set; }
-        public int severity { get; set; }
-        public DateTime timestamp { get; set; }
-        public String message { get; set; }
-        public bool confirm { get; set; }
+        private int _id;
+        private string _pod;
+        private string _location;
+        private string _hostname;
+        private int _severity;
+        private DateTime _timestamp;
+        private string _message;
+        private bool _confirm;
+        private bool _duplicate;
+
+        public int id
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value; 
+
+            }
+        }
+
+        public String pod
+        {
+            get { return _pod; }
+            set { _pod = value; }
+        }
+
+        public String location
+        {
+            get { return _location; }
+            set { _location = value; }
+        }
+
+        public String hostname
+        {
+            get { return _hostname; }
+            set { _hostname = value; }
+        }
+
+        public int severity
+        {
+            get { return _severity;}
+            set { _severity = value; }
+        }
+        public DateTime timestamp
+        {
+            get { return _timestamp;}
+            set { _timestamp = value; }
+        }
+        public String message
+        {
+            get { return _message;}
+            set { _message = value; }
+        }
+        public bool confirm
+        {
+            get { return _confirm;}
+            set { _confirm = value; }
+        }
+        public bool duplicate
+        {
+            get { return _duplicate;}
+            set { _duplicate = value; }
+        }
 
         public Entry(int id, string pod, string location, string hostname,
             int severity, DateTime timestamp, string message)
         {
-            this.id = id;
-            this.pod = pod;
-            this.location = location;
-            this.hostname = hostname;
-            this.severity = severity;
-            this.timestamp = timestamp;
-            this.message = message;
-            this.confirm = false;
+            this._id = id;
+            this._pod = pod;
+            this._location = location;
+            this._hostname = hostname;
+            this._severity = severity;
+            this._timestamp = timestamp;
+            this._message = message;
+            this._confirm = false;
+            this._duplicate = false;
+            
+            
         }
 
         public Entry()
@@ -37,6 +98,7 @@ namespace zbW.ProjNuGet
             this.timestamp = DateTime.Today;
             this.message = "";
             this.confirm = false;
+            this.duplicate = false;
         }
 
 

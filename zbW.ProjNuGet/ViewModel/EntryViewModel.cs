@@ -8,6 +8,7 @@ using System.Windows.Input;
 using zbW.ProjNuGet.Connection;
 using System.Linq;
 using DuplicateCheckerLib;
+using zbW.ProjNuGet.Properties;
 
 namespace zbW.ProjNuGet.ViewModel
 {
@@ -42,18 +43,44 @@ namespace zbW.ProjNuGet.ViewModel
             {
                 _selectedEntry = value;
                 NotifyPropertyChanged("SelectedEntry");
-                if (LoadCommand != null)
+                if (AddCommand != null)
                 {
                     ((RelayCommand)AddCommand).RaiseCanExecuteChanged();
                 }
             }
         }
         public String connection { get; set; }
+        private List<int> _duplicateInts = new List<int>();
 
-       
+        public List<int> duplicatesInt
+        {
+            get { return _duplicateInts; }
+            set
+            {
+                
+                _duplicateInts = value;
+                NotifyPropertyChanged("DuplicateInts");
+                if (DeleteCommand != null)
+                {
+                    ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
+                }
+
+            }
+        }
+
+
         public String Server
         {
-            get { return _server; }
+            get
+            {
+#if DEBUG
+                if (string.IsNullOrEmpty(_server))
+                {
+                    return Settings.Default.DefaultServer;
+                }
+#endif
+                return _server;
+            }
             set
             {
                 _server = value;
@@ -66,7 +93,16 @@ namespace zbW.ProjNuGet.ViewModel
         }
         public String Database
         {
-            get { return _db; }
+            get
+            {
+#if DEBUG
+                if (string.IsNullOrEmpty(_db))
+                {
+                    return Settings.Default.DefaultDB;
+                }
+#endif
+                return _db;
+            }
             set
             {
                 _db = value;
@@ -79,7 +115,16 @@ namespace zbW.ProjNuGet.ViewModel
         }
         public String User
         {
-            get { return _uid; }
+            get
+            {
+#if DEBUG
+                if (string.IsNullOrEmpty(_uid))
+                {
+                    return Settings.Default.DefaultUser;
+                }
+#endif
+                return _uid;
+            }
             set
             {
                 _uid = value;
@@ -93,7 +138,16 @@ namespace zbW.ProjNuGet.ViewModel
         }
         public String Password
         {
-            get { return _pwd; }
+            get
+            {
+#if DEBUG
+                if (string.IsNullOrEmpty(_pwd))
+                {
+                    return Settings.Default.DefaultPW;
+                }
+#endif
+                return _pwd;
+            }
             set
             {
                 _pwd = value;
@@ -121,6 +175,7 @@ namespace zbW.ProjNuGet.ViewModel
             AddCommand = new RelayCommand(AddExecute, CanExecuteAddCommand);
             ConfirmCommand = new RelayCommand(ConfirmExecute, CanExecuteConfirmCommand);
             DuplicateCommand = new RelayCommand(DuplicateExecute, CanExecuteDuplicateCommand);
+            DeleteCommand = new RelayCommand(DeleteExecute, CanExecuteDeleteCommand);
             //CloseCommand = new RelayCommand<ICloseable>(this.CloseExecute);
 
         }
@@ -149,13 +204,14 @@ namespace zbW.ProjNuGet.ViewModel
         public ICommand AddCommand { get; internal set; }
         public ICommand ConfirmCommand { get; internal set; }
         public ICommand DuplicateCommand { get; internal set; }
+        public ICommand DeleteCommand { get; internal set; }
         //public ICommand CloseCommand { get; internal set; }
 
 
 
         private bool CanExecuteLoadCommand()
         {
-            if(Server != "" && Database != "" && User != "" && Password != "")
+            if(Server != "" && Database != "" && User != "")
             {
                 return true;
             }
@@ -185,11 +241,17 @@ namespace zbW.ProjNuGet.ViewModel
             return true;
         }
 
+        private bool CanExecuteDeleteCommand()
+        {
+            if (duplicatesInt.Count > 0) return true;
+            return false;
+        }
+
         public void LoadExecute()
         {
             connection = GenerateConnentionString(Server, Database, User, Password);
             var entries = repo.GetEntrys(connection);
-            
+           
             this.Entrys.Clear();
             foreach (Entry entry in entries)
             {
@@ -199,12 +261,10 @@ namespace zbW.ProjNuGet.ViewModel
             if (DuplicateCommand != null)
             {
                 ((RelayCommand)DuplicateCommand).RaiseCanExecuteChanged();
-
             }
             if (ConfirmCommand != null)
             {
                 ((RelayCommand)ConfirmCommand).RaiseCanExecuteChanged();
-
             }
 
 
@@ -248,19 +308,60 @@ namespace zbW.ProjNuGet.ViewModel
         public void DuplicateExecute()
         {
             var duplicates = dubChecker.FindDuplicates(Entrys);
+
             if (duplicates.Count() != 0)
             {
                 var i = new List<int>();
-                foreach (Entry entry in duplicates)
+                var l = Entrys.ToList();
+                this.Entrys.Clear();
+                foreach (Entry e in duplicates)
                 {
-                    i.Add(entry.id);
+                    foreach (var dup in l)
+                    {
+                        if (e.Equals(dup))
+                        {
+                            e.duplicate = true;
+                            e.confirm = true;
+                            i.Add(e.id);
+                        }
+                    }
+                    
                 }
-                connection = GenerateConnentionString(Server, Database, User, Password);
-                repo.ConfirmEntry(i, connection);
-            }
+                
+                this.Entrys.Clear();
+                foreach (Entry entry in l)
+                {
+                    this.Entrys.Add(entry);
+                }
 
-            LoadExecute();
+                NotifyPropertyChanged("Entrys");
+                if (DuplicateCommand != null)
+                {
+                    ((RelayCommand)DuplicateCommand).RaiseCanExecuteChanged();
+
+                }
+
+                duplicatesInt = i;
+            }
         }
+
+        public void DeleteExecute()
+        {
+            connection = GenerateConnentionString(Server, Database, User, Password);
+            repo.ConfirmEntry(duplicatesInt, connection);
+            duplicatesInt.Clear();
+
+            NotifyPropertyChanged("DuplicateInts");
+            
+            if (DeleteCommand != null)
+            {
+                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
+
+            }
+            LoadExecute();
+            
+        }
+
         /*
         public void CloseExecute(ICloseable window)
         {

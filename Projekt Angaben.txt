@@ -1,0 +1,10 @@
+ID: lf_ZbW_ProgAdV_Nuget
+
+Einbindung der View:
+
+xmlns:viewX1="clr-namespace:zbW.ProjNuGet.ViewModel;assembly=zbW.ProjNuGet"
+
+<viewX1:UserControl1></viewX1:UserControl1>
+
+Meine Datenbank habe ich dir als .sql Files mitgeliefert.
+Ist in meinem Projekt im sql Ordner abgelegt. Name der DB: sempro

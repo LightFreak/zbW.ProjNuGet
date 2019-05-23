@@ -52,22 +52,24 @@
         <Label Grid.Column="1" Grid.Row="3" Content="User: " />
         <Label Grid.Column="7" Grid.Row="3" Content="Password: " />
         <TextBox Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1" x:Name="Server" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
-                 Text="{Binding Server, Mode=TwoWay}" />
+                 Text="{Binding Server, NotifyOnSourceUpdated=True, Mode=TwoWay}" />
         <TextBox Grid.Column="8" Grid.ColumnSpan="2" Grid.Row="1" x:Name="Database" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
-                 Text="{Binding Database, Mode=TwoWay}" />
+                 Text="{Binding Database, NotifyOnSourceUpdated=True, Mode=TwoWay}" />
         <TextBox Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="3" x:Name="User" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
-                 Text="{Binding User, Mode=TwoWay}" />
-        <TextBox Grid.Column="8" Grid.ColumnSpan="2" Grid.Row="3" x:Name="Password" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Password, Mode=TwoWay}"
+                 Text="{Binding User, NotifyOnSourceUpdated=True, Mode=TwoWay}" />
+        <TextBox Grid.Column="8" Grid.ColumnSpan="2" Grid.Row="3" x:Name="Password" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
+                 Text="{Binding Password, NotifyOnSourceUpdated=True, Mode=TwoWay}"
                  />
         <DataGrid Grid.Column="1" Grid.ColumnSpan="9" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Top"
                   ItemsSource="{Binding Entrys, NotifyOnSourceUpdated=True, Mode=TwoWay}" SelectedItem="{Binding SelectedEntry, Mode=TwoWay}" MinWidth="500"  MinHeight="200">
             
         </DataGrid>
        
-        <Button Grid.Row="7" Grid.Column="3" Content="Confirm" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="90" Command="{Binding ConfirmCommand}"/>
-        <Button Grid.Row="7" Grid.Column="1" Content="Refresh" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="90" Command="{Binding LoadCommand}" />
-        <Button Grid.Row="7" Grid.Column="5" Content="Add" HorizontalAlignment="Left"  VerticalAlignment="Top" Width="90" Command="{Binding AddCommand}"/>
-        <Button Grid.Row="7" Grid.Column="7" Content="Find Duplicates" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="90" Command="{Binding DuplicateCommand}" />
+        <Button Grid.Row="7" Grid.Column="3" Content="Confirm" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Command="{Binding ConfirmCommand}"/>
+        <Button Grid.Row="7" Grid.Column="1" Content="Refresh" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Command="{Binding LoadCommand}" />
+        <Button Grid.Row="7" Grid.Column="5" Content="Add" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch"  Command="{Binding AddCommand}"/>
+        <Button Grid.Row="7" Grid.Column="7" Content="Find Duplicates" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Command="{Binding DuplicateCommand}" />
+        <Button Grid.Row="7" Grid.Column="9" Content="Delete All Duplicates" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Command="{Binding DeleteCommand, NotifyOnSourceUpdated=True}" />
         <!--<Button Grid.Row="7" Grid.Column="9" Content="Close" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="90" Command="{Binding CloseCommand, Mode=OneWay}"
                 CommandParameter="{Binding ElementName=LogConfirm}"/>-->
         

@@ -7,6 +7,9 @@ using System.Windows.Input;
 
 namespace zbW.ProjNuGet
 {
+    /// <summary>
+    /// Mit Freundlichen Grüssen aus dem Internet Kopiert....
+    /// </summary>
     public class RelayCommand : ICommand
     {
         

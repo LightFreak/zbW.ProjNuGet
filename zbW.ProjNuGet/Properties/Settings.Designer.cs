@@ -22,5 +22,53 @@ namespace zbW.ProjNuGet.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string DefaultServer {
+            get {
+                return ((string)(this["DefaultServer"]));
+            }
+            set {
+                this["DefaultServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("semesterprojekt")]
+        public string DefaultDB {
+            get {
+                return ((string)(this["DefaultDB"]));
+            }
+            set {
+                this["DefaultDB"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("test")]
+        public string DefaultUser {
+            get {
+                return ((string)(this["DefaultUser"]));
+            }
+            set {
+                this["DefaultUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("123456789")]
+        public string DefaultPW {
+            get {
+                return ((string)(this["DefaultPW"]));
+            }
+            set {
+                this["DefaultPW"] = value;
+            }
+        }
     }
 }
