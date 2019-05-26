@@ -89,6 +89,10 @@ namespace zbW.ProjNuGet.ViewModel
                 {
                     ((RelayCommand) LoadCommand).RaiseCanExecuteChanged();
                 }
+                if (ConnectCommand != null)
+                {
+                    ((RelayCommand)ConnectCommand).RaiseCanExecuteChanged();
+                }
             }
         }
         public String Database
@@ -110,6 +114,10 @@ namespace zbW.ProjNuGet.ViewModel
                 if (LoadCommand != null)
                 {
                     ((RelayCommand) LoadCommand).RaiseCanExecuteChanged();
+                }
+                if (ConnectCommand != null)
+                {
+                    ((RelayCommand)ConnectCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -133,6 +141,10 @@ namespace zbW.ProjNuGet.ViewModel
                 {
                     ((RelayCommand)LoadCommand).RaiseCanExecuteChanged();
                 }
+                if (ConnectCommand != null)
+                {
+                    ((RelayCommand)ConnectCommand).RaiseCanExecuteChanged();
+                }
 
             }
         }
@@ -155,6 +167,10 @@ namespace zbW.ProjNuGet.ViewModel
                 if (LoadCommand != null)
                 {
                     ((RelayCommand)LoadCommand).RaiseCanExecuteChanged();
+                }
+                if (ConnectCommand != null)
+                {
+                    ((RelayCommand)ConnectCommand).RaiseCanExecuteChanged();
                 }
             }
         }
@@ -326,9 +342,9 @@ namespace zbW.ProjNuGet.ViewModel
                 var i = new List<int>();
                 var l = Entrys.ToList();
                 this.Entrys.Clear();
-                foreach (Entry e in duplicates)
+                foreach (Entry e in l)
                 {
-                    foreach (var dup in l)
+                    foreach (var dup in duplicates)
                     {
                         if (e.Equals(dup))
                         {
