@@ -176,7 +176,7 @@ namespace zbW.ProjNuGet.ViewModel
             ConfirmCommand = new RelayCommand(ConfirmExecute, CanExecuteConfirmCommand);
             DuplicateCommand = new RelayCommand(DuplicateExecute, CanExecuteDuplicateCommand);
             DeleteCommand = new RelayCommand(DeleteExecute, CanExecuteDeleteCommand);
-            //CloseCommand = new RelayCommand<ICloseable>(this.CloseExecute);
+            ConnectCommand = new RelayCommand(ConnectExecute, CanExecuteConnectCommand);
 
         }
 
@@ -205,13 +205,22 @@ namespace zbW.ProjNuGet.ViewModel
         public ICommand ConfirmCommand { get; internal set; }
         public ICommand DuplicateCommand { get; internal set; }
         public ICommand DeleteCommand { get; internal set; }
-        //public ICommand CloseCommand { get; internal set; }
+        public ICommand ConnectCommand { get; internal set; }
 
 
 
         private bool CanExecuteLoadCommand()
         {
-            if(Server != "" && Database != "" && User != "")
+            if(Server != "" && Database != "" && User != "" && Entrys.Count > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool CanExecuteConnectCommand()
+        {
+            if (Server != "" && Database != "" && User != "")
             {
                 return true;
             }
@@ -236,15 +245,15 @@ namespace zbW.ProjNuGet.ViewModel
             return false;
         }
 
-        private bool CanExecuteCloseCommand()
-        {
-            return true;
-        }
-
         private bool CanExecuteDeleteCommand()
         {
             if (duplicatesInt.Count > 0) return true;
             return false;
+        }
+
+        public void ConnectExecute()
+        {
+            LoadExecute();
         }
 
         public void LoadExecute()
@@ -266,7 +275,10 @@ namespace zbW.ProjNuGet.ViewModel
             {
                 ((RelayCommand)ConfirmCommand).RaiseCanExecuteChanged();
             }
-
+            if (LoadCommand != null)
+            {
+                ((RelayCommand)LoadCommand).RaiseCanExecuteChanged();
+            }
 
         }
 
