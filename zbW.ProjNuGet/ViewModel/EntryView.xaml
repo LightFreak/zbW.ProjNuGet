@@ -62,7 +62,7 @@
                  />
         <DataGrid Grid.Column="1" Grid.ColumnSpan="9" Grid.Row="5" HorizontalAlignment="Stretch" VerticalAlignment="Top"
                   ItemsSource="{Binding Entrys, NotifyOnSourceUpdated=True, Mode=TwoWay}" SelectedItem="{Binding SelectedEntry, Mode=TwoWay}" MinWidth="500"  MinHeight="200">
-            
+
         </DataGrid>
 
         <Button Grid.Row="3" Grid.Column="9" Content="Connect" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Command="{Binding ConnectCommand}"/>
@@ -73,6 +73,6 @@
         <Button Grid.Row="7" Grid.Column="9" Content="Delete All Duplicates" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Command="{Binding DeleteCommand, NotifyOnSourceUpdated=True}" />
         <!--<Button Grid.Row="7" Grid.Column="9" Content="Close" HorizontalAlignment="Left" Height="20" VerticalAlignment="Top" Width="90" Command="{Binding CloseCommand, Mode=OneWay}"
                 CommandParameter="{Binding ElementName=LogConfirm}"/>-->
-        
+
     </Grid>
 </UserControl>
