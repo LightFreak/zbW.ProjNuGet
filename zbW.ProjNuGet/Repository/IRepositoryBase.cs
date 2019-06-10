@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GenericRepository{
+
     public interface IRepositoryBase<M>{
         /// <summary>
         /// Liefert ein einzelnes Model-Objekt vom Typ M zurück,

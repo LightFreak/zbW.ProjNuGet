@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using DuplicateCheckerLib;
 
 namespace zbW.ProjNuGet
 {
-    class Entry : IEntity
+    public class LogEntry : IEntity
     {
         private int _id;
         private string _pod;
@@ -14,7 +15,7 @@ namespace zbW.ProjNuGet
         private string _message;
         private bool _confirm;
         private bool _duplicate;
-
+        
         public int id
         {
             get
@@ -28,19 +29,19 @@ namespace zbW.ProjNuGet
             }
         }
 
-        public String pod
+        public string pod
         {
             get { return _pod; }
             set { _pod = value; }
         }
 
-        public String location
+        public string location
         {
             get { return _location; }
             set { _location = value; }
         }
 
-        public String hostname
+        public string hostname
         {
             get { return _hostname; }
             set { _hostname = value; }
@@ -56,7 +57,7 @@ namespace zbW.ProjNuGet
             get { return _timestamp;}
             set { _timestamp = value; }
         }
-        public String message
+        public string message
         {
             get { return _message;}
             set { _message = value; }
@@ -72,7 +73,7 @@ namespace zbW.ProjNuGet
             set { _duplicate = value; }
         }
 
-        public Entry(int id, string pod, string location, string hostname,
+        public LogEntry(int id, string pod, string location, string hostname,
             int severity, DateTime timestamp, string message)
         {
             this._id = id;
@@ -85,10 +86,9 @@ namespace zbW.ProjNuGet
             this._confirm = false;
             this._duplicate = false;
             
-            
         }
 
-        public Entry()
+        public LogEntry()
         {
             this.id = 0;
             this.pod = "";
@@ -99,6 +99,8 @@ namespace zbW.ProjNuGet
             this.message = "";
             this.confirm = false;
             this.duplicate = false;
+           
+           
         }
 
 
@@ -109,15 +111,15 @@ namespace zbW.ProjNuGet
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return Equals(obj as Entry);
+            return Equals(obj as LogEntry);
         }
 
-        public bool Equals(Entry entry)
+        public bool Equals(LogEntry logEntry)
         {
-            if (Object.ReferenceEquals(null, entry)) return false;
-            if (Object.ReferenceEquals(this, entry)) return true;
+            if (Object.ReferenceEquals(null, logEntry)) return false;
+            if (Object.ReferenceEquals(this, logEntry)) return true;
 
-            return (severity == entry.severity && String.Equals(message, entry.message));
+            return (severity == logEntry.severity && String.Equals(message, logEntry.message));
         }
 
         public override int GetHashCode()
@@ -135,16 +137,16 @@ namespace zbW.ProjNuGet
             }
         }
 
-        public static bool operator ==(Entry entryA, Entry entryB)
+        public static bool operator ==(LogEntry logEntryA, LogEntry logEntryB)
         {
-            if (Object.ReferenceEquals(entryA, entryB)) return true;
-            if (Object.ReferenceEquals(null, entryA)) return false;
-            return entryA.Equals(entryB);
+            if (Object.ReferenceEquals(logEntryA, logEntryB)) return true;
+            if (Object.ReferenceEquals(null, logEntryA)) return false;
+            return logEntryA.Equals(logEntryB);
         }
         
-        public static bool operator !=(Entry entryA, Entry entryB)
+        public static bool operator !=(LogEntry logEntryA, LogEntry logEntryB)
         {
-            return !(entryA == entryB);
+            return !(logEntryA == logEntryB);
         }
 
     }

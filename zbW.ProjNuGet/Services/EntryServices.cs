@@ -11,18 +11,18 @@ namespace zbW.ProjNuGet.Connection
     class EntryServices : IEntryServices
     {
         
-        public void AddEntry(Entry entry, String connection)
+        public void AddEntry(LogEntry logEntry, String connection)
         {
-            //string date = entry.timestamp.ToString("yyyy-MM-dd hh:mm:ss");
+            //string date = logEntry.timestamp.ToString("yyyy-MM-dd hh:mm:ss");
             IDbConnection con = null; // Verbindung deklarieren
             try
             {
-                string date = entry.timestamp.ToString("yyyy-MM-dd hh:mm:ss");
+                string date = logEntry.timestamp.ToString("yyyy-MM-dd hh:mm:ss");
                 con = new MySqlConnection(connection); //Verbindung erzeugen
                 con.Open();
                 //----- SQL-Kommando aufbauen
                 IDbCommand cmd = con.CreateCommand();
-                cmd.CommandText = "call LogMessageAdd('" + date + "','" + entry.hostname + "'," + entry.severity + ",'" + entry.message + "');";
+                cmd.CommandText = "call LogMessageAdd('" + date + "','" + logEntry.hostname + "'," + logEntry.severity + ",'" + logEntry.message + "');";
                 //----- SQL-Kommando ausführen; liefert einen OleDbDataReader
                 cmd.ExecuteNonQuery();
                 
@@ -93,9 +93,9 @@ namespace zbW.ProjNuGet.Connection
         }
                    
         
-        public List<Entry> GetEntrys(String connection)
+        public List<LogEntry> GetEntrys(String connection)
         {
-            List<Entry> result = new List<Entry>();
+            List<LogEntry> result = new List<LogEntry>();
 
             IDbConnection con = null; // Verbindung deklarieren
             try
@@ -108,7 +108,7 @@ namespace zbW.ProjNuGet.Connection
                 cmd.CommandText = "SELECT id,pod,location,hostname,severity,timestamp,message FROM v_logentries order by timestamp;";
                 //----- SQL-Kommando ausführen; liefert einen OleDbDataReader
                 IDataReader reader = cmd.ExecuteReader();
-
+                
 
                 object[] dataRow = new object[reader.FieldCount];
                 //----- Daten zeilenweise lesen und verarbeiten
@@ -116,7 +116,7 @@ namespace zbW.ProjNuGet.Connection
                 {
                     // solange noch Daten vorhanden sind
                     int cols = reader.GetValues(dataRow); // tatsächliches Lesen 
-                    var curEntry = new Entry((int)reader["id"], (string)reader["pod"], (string)reader["location"], (string)reader["hostname"], (int)reader["severity"], (DateTime)reader["timestamp"], (string)reader["message"]);
+                    var curEntry = new LogEntry((int)reader["id"], (string)reader["pod"], (string)reader["location"], (string)reader["hostname"], (int)reader["severity"], (DateTime)reader["timestamp"], (string)reader["message"]);
                     result.Add(curEntry);
                 }
 
@@ -143,7 +143,7 @@ namespace zbW.ProjNuGet.Connection
             }
 
             Console.ReadLine();
-            return new List<Entry>();
+            return new List<LogEntry>();
 
         }
     

@@ -2,28 +2,33 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using zbW.ProjNuGet.Connection;
 using System.Linq;
 using DuplicateCheckerLib;
+using zbW.ProjNuGet.Model;
 using zbW.ProjNuGet.Properties;
+using zbW.ProjNuGet.Repository;
 
 namespace zbW.ProjNuGet.ViewModel
 {
     class EntryViewModel : INotifyPropertyChanged
     {
-        private readonly IEntryServices repo = new EntryServices();
+        private readonly LocationRepoMySql locRepo = new LocationRepoMySql();
+        private readonly LoggingRepoMySql logRepo = new LoggingRepoMySql();
         public event PropertyChangedEventHandler PropertyChanged;
-        private ObservableCollection<Entry> _entrys;
-        private String _server;
-        private String _db;
-        private String _uid;
-        private String _pwd;
-        private Entry _selectedEntry;
+        private ObservableCollection<LogEntry> _entrys;
+        private string _server;
+        private string _db;
+        private string _uid;
+        private string _pwd;
+        private LogEntry _selectedLogEntry;
         private DuplicateChecker _dubChecker;
         private Boolean _canExecuteLoad;
+        private IEnumerable<IEntity> _duplicates;
+
+        private Dictionary<string, Object> logDictionary = new Dictionary<string, object>();
+        private Dictionary<string, Object> locDictionary = new Dictionary<string, object>();
+
         public void NotifyPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
@@ -31,45 +36,26 @@ namespace zbW.ProjNuGet.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        public ObservableCollection<Entry> Entrys
+        public ObservableCollection<LogEntry> Entrys
         {
             get { return _entrys;}
             set { _entrys = value; }
         }
-        public Entry SelectedEntry
+        public LogEntry SelectedLogEntry
         {
-            get { return _selectedEntry; }
+            get { return _selectedLogEntry; }
             set
             {
-                _selectedEntry = value;
-                NotifyPropertyChanged("SelectedEntry");
+                _selectedLogEntry = value;
+                NotifyPropertyChanged("SelectedLogEntry");
                 if (AddCommand != null)
                 {
                     ((RelayCommand)AddCommand).RaiseCanExecuteChanged();
                 }
             }
         }
-        public String connection { get; set; }
-        private List<int> _duplicateInts = new List<int>();
-
-        public List<int> duplicatesInt
-        {
-            get { return _duplicateInts; }
-            set
-            {
-                
-                _duplicateInts = value;
-                NotifyPropertyChanged("DuplicateInts");
-                if (DeleteCommand != null)
-                {
-                    ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
-                }
-
-            }
-        }
-
-
-        public String Server
+        public string connection { get; set; }
+        public string Server
         {
             get
             {
@@ -95,7 +81,7 @@ namespace zbW.ProjNuGet.ViewModel
                 }
             }
         }
-        public String Database
+        public string Database
         {
             get
             {
@@ -121,7 +107,7 @@ namespace zbW.ProjNuGet.ViewModel
                 }
             }
         }
-        public String User
+        public string User
         {
             get
             {
@@ -148,7 +134,7 @@ namespace zbW.ProjNuGet.ViewModel
 
             }
         }
-        public String Password
+        public string Password
         {
             get
             {
@@ -185,18 +171,19 @@ namespace zbW.ProjNuGet.ViewModel
         {
             InitEntrys();
             InitCred();
+            InitDictionarys();
             
             dubChecker = new DuplicateChecker();
             LoadCommand = new RelayCommand(LoadExecute, CanExecuteLoadCommand);
             AddCommand = new RelayCommand(AddExecute, CanExecuteAddCommand);
             ConfirmCommand = new RelayCommand(ConfirmExecute, CanExecuteConfirmCommand);
             DuplicateCommand = new RelayCommand(DuplicateExecute, CanExecuteDuplicateCommand);
-            DeleteCommand = new RelayCommand(DeleteExecute, CanExecuteDeleteCommand);
+            DeleteAllDuplicatesCommand = new RelayCommand(DeleteAllDuplicatesExecute, CanExecuteDeleteCommand);
             ConnectCommand = new RelayCommand(ConnectExecute, CanExecuteConnectCommand);
 
         }
 
-        public String GenerateConnentionString(String server, String db, String uid, String pwd)
+        public string GenerateConnentionString(String server, String db, String uid, String pwd)
         {
             return "Server = " + Server + "; Database = " + Database + "; Uid = " + User + ";Pwd = " + Password + ";";
         }
@@ -210,17 +197,31 @@ namespace zbW.ProjNuGet.ViewModel
         }
         private void InitEntrys()
         {
-            var e = new List<Entry>();
-            e.Add(new Entry());
-            Entrys = new ObservableCollection<Entry>(e);
+            var e = new List<LogEntry>();
+            e.Add(new LogEntry());
+            Entrys = new ObservableCollection<LogEntry>(e);
             this.Entrys.Clear();
+        }
+
+        private void InitDictionarys()
+        {
+            logDictionary.Add("@pod1", "Nöldi Gmbh");
+            logDictionary.Add("@pod2", "Swiss Consulting");
+            logDictionary.Add("@hostname", "Ghost002");
+            logDictionary.Add("@hostname2", "DVC%");
+            logDictionary.Add("@message", "%test%");
+            logDictionary.Add("@message2", "%CODE%");
+            locDictionary.Add("@name1","Hauptsitz");
+            locDictionary.Add("@name2", "Filiale Gossau");
+            locDictionary.Add("@pod1", 1);
+            locDictionary.Add("@pod2", 2);
         }
 
         public ICommand LoadCommand { get; internal set; }
         public ICommand AddCommand { get; internal set; }
         public ICommand ConfirmCommand { get; internal set; }
         public ICommand DuplicateCommand { get; internal set; }
-        public ICommand DeleteCommand { get; internal set; }
+        public ICommand DeleteAllDuplicatesCommand { get; internal set; }
         public ICommand ConnectCommand { get; internal set; }
 
 
@@ -245,7 +246,7 @@ namespace zbW.ProjNuGet.ViewModel
 
         private bool CanExecuteAddCommand()
         {
-            if (SelectedEntry != null) return true;
+            if (SelectedLogEntry != null) return true;
             return false;
         }
 
@@ -263,22 +264,27 @@ namespace zbW.ProjNuGet.ViewModel
 
         private bool CanExecuteDeleteCommand()
         {
-            if (duplicatesInt.Count > 0) return true;
+            if (_duplicates != null && _duplicates.Count() > 0) return true;
             return false;
         }
 
         public void ConnectExecute()
         {
+            connection = GenerateConnentionString(Server, Database, User, Password);
+            locRepo.ConnectionString = connection;
+            logRepo.ConnectionString = connection;
             LoadExecute();
         }
 
         public void LoadExecute()
         {
-            connection = GenerateConnentionString(Server, Database, User, Password);
-            var entries = repo.GetEntrys(connection);
-           
+            var entity = new LogEntry();
+            var entries = logRepo.GetAll();
+
+            //var test = locRepo.GetAll("name = @name1", locDictionary);
+            
             this.Entrys.Clear();
-            foreach (Entry entry in entries)
+            foreach (LogEntry entry in entries)
             {
                 this.Entrys.Add(entry);
             }
@@ -300,12 +306,11 @@ namespace zbW.ProjNuGet.ViewModel
 
         public void AddExecute()
         {
-            if(SelectedEntry != null)
+            if(SelectedLogEntry != null)
             {
-                if(SelectedEntry.timestamp != null && SelectedEntry.severity != 0)
+                if(SelectedLogEntry.timestamp != null && SelectedLogEntry.severity != 0)
                 {
-                    connection = GenerateConnentionString(Server, Database, User, Password);
-                    repo.AddEntry(SelectedEntry, connection);
+                    logRepo.Add(SelectedLogEntry);
                     LoadExecute();
                 }
             }
@@ -314,50 +319,53 @@ namespace zbW.ProjNuGet.ViewModel
 
         public void ConfirmExecute()
         {
-            var toConfirm = new List<int>();
+            var toConfirm = new List<LogEntry>();
 
-            foreach (Entry entry in Entrys)
+            foreach (LogEntry entry in Entrys)
             {
                 if (entry.confirm == true)
                 {
-                    toConfirm.Add(entry.id);
+                    toConfirm.Add(entry);
                 }
             }
 
             if (toConfirm.Count != 0)
             {
-                connection = GenerateConnentionString(Server, Database, User, Password);
-                repo.ConfirmEntry(toConfirm,connection);
+                foreach (var entry in toConfirm)
+                {
+                   logRepo.Delete(entry); 
+                }
+                
             }
 
             LoadExecute();
+            DuplicateExecute();
         }
 
         public void DuplicateExecute()
         {
-            var duplicates = dubChecker.FindDuplicates(Entrys);
+            _duplicates = dubChecker.FindDuplicates(Entrys);
 
-            if (duplicates.Count() != 0)
+            if (_duplicates.Count() != 0)
             {
-                var i = new List<int>();
+                
                 var l = Entrys.ToList();
                 this.Entrys.Clear();
-                foreach (Entry e in l)
+                foreach (LogEntry e in l)
                 {
-                    foreach (var dup in duplicates)
+                    foreach (var dup in _duplicates)
                     {
                         if (e.Equals(dup))
                         {
                             e.duplicate = true;
                             e.confirm = true;
-                            i.Add(e.id);
                         }
                     }
                     
                 }
                 
                 this.Entrys.Clear();
-                foreach (Entry entry in l)
+                foreach (LogEntry entry in l)
                 {
                     this.Entrys.Add(entry);
                 }
@@ -368,36 +376,31 @@ namespace zbW.ProjNuGet.ViewModel
                     ((RelayCommand)DuplicateCommand).RaiseCanExecuteChanged();
 
                 }
-
-                duplicatesInt = i;
+                if (DeleteAllDuplicatesCommand != null)
+                {
+                    ((RelayCommand)DeleteAllDuplicatesCommand).RaiseCanExecuteChanged();
+                }
             }
         }
 
-        public void DeleteExecute()
+        public void DeleteAllDuplicatesExecute()
         {
-            connection = GenerateConnentionString(Server, Database, User, Password);
-            repo.ConfirmEntry(duplicatesInt, connection);
-            duplicatesInt.Clear();
-
+            foreach (var dupl in _duplicates)
+            {
+                logRepo.Delete((LogEntry) dupl);
+            }
             NotifyPropertyChanged("DuplicateInts");
             
-            if (DeleteCommand != null)
+            if (DeleteAllDuplicatesCommand != null)
             {
-                ((RelayCommand)DeleteCommand).RaiseCanExecuteChanged();
+                ((RelayCommand)DeleteAllDuplicatesCommand).RaiseCanExecuteChanged();
 
             }
             LoadExecute();
+            DuplicateExecute();
             
         }
 
-        /*
-        public void CloseExecute(ICloseable window)
-        {
-            if (window != null)
-            {
-                window.Close();
-            }
-        }*/
     }
 
 }

@@ -8,8 +8,8 @@ namespace zbW.ProjNuGet.Connection
 {
     interface IEntryServices
     {
-        List<Entry> GetEntrys(String connection);
+        List<LogEntry> GetEntrys(String connection);
         void ConfirmEntry(List<int> id, String connection);
-        void AddEntry(Entry entry, String connection);
+        void AddEntry(LogEntry logEntry, String connection);
     }
 }
