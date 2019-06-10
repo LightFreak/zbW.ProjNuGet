@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:zbW.ProjNuGetTest"
-        xmlns:viewX="clr-namespace:zbW.ProjNuGet.ViewModel"
         xmlns:viewX1="clr-namespace:zbW.ProjNuGet.ViewModel;assembly=zbW.ProjNuGet"
+        xmlns:views="clr-namespace:zbW.ProjNuGet.Views;assembly=zbW.ProjNuGet"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <viewX1:UserControl1></viewX1:UserControl1>
+        <views:UserControl></views:UserControl>
     </Grid>
 </Window>

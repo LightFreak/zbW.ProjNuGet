@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Linq;
+using System.Windows;
 using DuplicateCheckerLib;
 using zbW.ProjNuGet.Model;
 using zbW.ProjNuGet.Properties;
@@ -23,7 +24,6 @@ namespace zbW.ProjNuGet.ViewModel
         private string _pwd;
         private LogEntry _selectedLogEntry;
         private DuplicateChecker _dubChecker;
-        private Boolean _canExecuteLoad;
         private IEnumerable<IEntity> _duplicates;
 
         private Dictionary<string, Object> logDictionary = new Dictionary<string, object>();
@@ -279,7 +279,17 @@ namespace zbW.ProjNuGet.ViewModel
         public void LoadExecute()
         {
             var entity = new LogEntry();
-            var entries = logRepo.GetAll();
+            List<LogEntry> entries = new List<LogEntry>();
+            try
+            {
+                entries = logRepo.GetAll();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                return;
+            }
+            
 
             //var test = locRepo.GetAll("name = @name1", locDictionary);
             

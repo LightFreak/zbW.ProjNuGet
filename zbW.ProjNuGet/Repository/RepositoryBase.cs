@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using GenericRepository;
 using MySql.Data.MySqlClient;
 
@@ -33,7 +29,6 @@ namespace zbW.ProjNuGet.Repository
         
         public abstract void Update(M entity);
         
-
         public abstract List<M> GetAll(string whereCondition, Dictionary<string, object> parameterValue);
 
         public List<M> GetAll()
@@ -70,7 +65,7 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                throw e;
             }
             finally
             {
@@ -82,12 +77,11 @@ namespace zbW.ProjNuGet.Repository
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    throw ex;
                 }
             }
 
-            Console.ReadLine();
-            return result;
+            
 
         }
     
@@ -122,10 +116,9 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                throw e;
             }
-
-            return result;
+            
         }
 
         public abstract string TableName { get; }

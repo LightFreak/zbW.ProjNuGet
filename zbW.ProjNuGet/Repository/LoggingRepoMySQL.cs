@@ -67,9 +67,9 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
-            return result;
+            
         }
         /// <summary>
         /// Fügt einen neuen Eintrag der Datenbank hinzu.
@@ -114,7 +114,7 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
             
         }
@@ -148,7 +148,7 @@ namespace zbW.ProjNuGet.Repository
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    throw e;
                 }
             }
         }
@@ -212,12 +212,13 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
-            return new List<LogEntry>();
+
+           
         }
         
-        public IQueryable<LogEntry> Query(string whereCondition, Dictionary<string, object> parameterValues)
+        public override IQueryable<LogEntry> Query(string whereCondition, Dictionary<string, object> parameterValues)
         {
             throw new NotImplementedException();
         }
@@ -252,10 +253,9 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                throw e;
             }
 
-            return result;
         }
     }
 }

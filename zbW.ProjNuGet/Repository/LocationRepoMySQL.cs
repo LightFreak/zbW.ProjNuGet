@@ -74,9 +74,9 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
-            return result;
+            
         }
         /// <summary>
         /// Hinzufügen einer Location
@@ -117,7 +117,7 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-               Console.WriteLine(e);
+                throw e; 
             }
         }
         /// <summary>
@@ -150,7 +150,7 @@ namespace zbW.ProjNuGet.Repository
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    throw e;
                 }
             }
         }
@@ -196,7 +196,7 @@ namespace zbW.ProjNuGet.Repository
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    throw e;
                 }
             }
         }
@@ -242,9 +242,9 @@ namespace zbW.ProjNuGet.Repository
             }
             catch (Exception e)
             {
-                throw;
+                throw e;
             }
-            return new List<Location>();
+            
         }
 
         public override Location CreateEntry(IDataReader reader)
