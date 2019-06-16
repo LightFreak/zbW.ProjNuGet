@@ -12,7 +12,7 @@ using zbW.ProjNuGet.Repository;
 
 namespace zbW.ProjNuGet.ViewModel
 {
-    class EntryViewModel : INotifyPropertyChanged
+    public class EntryViewModel : INotifyPropertyChanged
     {
         private readonly LocationRepoMySql locRepo = new LocationRepoMySql();
         private readonly LoggingRepoMySql logRepo = new LoggingRepoMySql();
