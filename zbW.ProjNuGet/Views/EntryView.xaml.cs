@@ -1,11 +1,11 @@
 ﻿namespace zbW.ProjNuGet.Views
 {
     /// <summary>
-    /// Interaktionslogik für EntryView.xaml
+    /// Interaktionslogik für LoggingView.xaml
     /// </summary>
-    public partial class UserControl : System.Windows.Controls.UserControl
+    public partial class LoggingView : System.Windows.Controls.UserControl
     {
-        public UserControl()
+        public LoggingView()
         {
             InitializeComponent();
         }

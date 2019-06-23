@@ -1,15 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace zbW.ProjNuGet.Model
 {
     class Location
     {
-        public Location(int id = default, string name = null, int parent = default, int podId = default)
+       
+        public Location(int id = default, string name = null, int parent = default, int podId = default, List<Location> child = null)
         {
             _id = id;
-            _name = name ?? throw new ArgumentNullException(nameof(name));
+            _name = name;
             _parent = parent;
             _pod_id = podId;
+            _child = child;
         }
 
         public int Id
@@ -40,6 +43,13 @@ namespace zbW.ProjNuGet.Model
         private string _name;
         private int _parent;
         private int _pod_id;
+        private List<Location> _child;
+        
+        public List<Location> Child
+        {
+            get => _child;
+            set => _child = value;
+        }
 
         /// <summary>
         /// OBJECT Equality...

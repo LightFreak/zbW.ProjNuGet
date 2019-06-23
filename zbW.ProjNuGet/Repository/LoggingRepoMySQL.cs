@@ -9,12 +9,6 @@ namespace zbW.ProjNuGet.Repository
 {
     public class LoggingRepoMySql : RepositoryBase<LogEntry>
     {
-        public override string ConnectionString
-        {
-            get => base.ConnectionString;
-            set => base.ConnectionString = value;
-        }
-        
         /// <summary>
         /// Name der Tabelle innerhalb der Datenbank
         /// </summary>
@@ -71,6 +65,7 @@ namespace zbW.ProjNuGet.Repository
             }
             
         }
+        
         /// <summary>
         /// Fügt einen neuen Eintrag der Datenbank hinzu.
         /// </summary>
@@ -118,6 +113,7 @@ namespace zbW.ProjNuGet.Repository
             }
             
         }
+        
         /// <summary>
         /// Wird aufgerufen, wenn ein Eintrag bestätigt wird.
         /// </summary>
@@ -218,11 +214,6 @@ namespace zbW.ProjNuGet.Repository
            
         }
         
-        public override IQueryable<LogEntry> Query(string whereCondition, Dictionary<string, object> parameterValues)
-        {
-            throw new NotImplementedException();
-        }
-
         public override long Count(string whereCondition, Dictionary<string, object> parameterValues)
         {
             long result = 0;

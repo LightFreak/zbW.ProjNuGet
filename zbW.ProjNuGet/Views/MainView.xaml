@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:zbW.ProjNuGet.Views"
              xmlns:viewModel="clr-namespace:zbW.ProjNuGet.ViewModel"
              mc:Ignorable="d"
              d:DesignHeight="500" d:DesignWidth="1000">
@@ -62,9 +61,8 @@
         <TextBox Grid.Column="7" Grid.ColumnSpan="2" Grid.Row="3" x:Name="Password" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
                  Text="{Binding Password, NotifyOnSourceUpdated=True, Mode=TwoWay}"
         />
-        <Button Grid.Row="3" Grid.Column="10" Content="Connect" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Command="{Binding ConnectCommand}"/>
-        <Button Grid.Column="1" Grid.Row="5" BorderThickness="1" Content="Log Entrys" Command="{Binding LoadLogEntryView}" />
-        <Button Grid.Column="1" Grid.Row="7" BorderThickness="1" Content="Location Entrys" />
-        <UserControl Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="9" Grid.RowSpan="4" VerticalAlignment="Stretch" Background="LightGray" Margin="5" Content="{Binding Content}"  />
+        <Button Grid.Column="1" Grid.Row="5" Margin="2" BorderThickness="1" Content="Log Entrys" Command="{Binding LoadLogEntryView}" />
+        <Button Grid.Column="1" Grid.Row="7" Margin="2" BorderThickness="1" Content="Location Entrys" Command="{Binding LoadLocationEntryView}" />
+        <UserControl Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="10" Grid.RowSpan="4" VerticalAlignment="Stretch" Background="LightGray" Margin="2" Content="{Binding Content}"  />
     </Grid>
 </UserControl>

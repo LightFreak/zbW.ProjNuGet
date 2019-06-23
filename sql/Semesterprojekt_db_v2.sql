@@ -1,10 +1,10 @@
-DROP DATABASE IF EXISTS `semesterprojekt`;
+DROP DATABASE IF EXISTS `sempro`;
 
-CREATE Database if not exists `semesterprojekt`
+CREATE Database if not exists `sempro`
 	character set utf8
     ;
     
-USE  `semesterprojekt`;
+USE  `sempro`;
 
 CREATE TABLE IF NOT EXISTS NTPServer (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS Location (
 	id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     POD_id INT NOT NULL,
-    Parent_id INT NOT NULL,
+    Parent_id INT,
     PRIMARY KEY(id),
     FOREIGN KEY(POD_id)
 		REFERENCES POD(id)
@@ -813,11 +813,13 @@ INSERT INTO `POD` (`id`, `name`, `Kundenkonto_id`)
 	VALUES 	(NULL,'Nöldi Gmbh', '1'),
 			(NULL,'Swiss Consulting', '2');
 INSERT INTO `Location` (`id`, `name`, `POD_id`,`Parent_id`)
-	VALUES 	(1,'Hauptsitz', '1',1),
-			(2,'Filiale Gossau', '1',1),
-			(3,'Filiale Flawil', '1',1),
-            (4,'Hauptsitz', '2',4),
-            (5,'Filiale Appenzell', '2',4);
+	VALUES 	(1,'Schweiz', '1',0),
+            (2,'Hauptsitz', '1',1),
+			(3,'Filiale Gossau', '1',2),
+			(4,'Agentur Flawil', '1',3),
+            (5,'Hauptsitz', '2',1),
+            (6,'Filiale Appenzell', '2',5),
+            (7,'Filiale Herisau','2',5);
 INSERT INTO `Prioritaeten` (`id`, `Kontaktperson_id`, `POD_id`, `Prioritaet`)
 	VALUES 	(NULL, '2', '1', '1'),
 			(NULL, '1', '2', '1');

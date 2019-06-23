@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using zbW.ProjNuGet.Model;
 
@@ -13,19 +11,9 @@ namespace zbW.ProjNuGet.Repository
 
     class LocationRepoMySql : RepositoryBase<Location>
     {
-        public override long Count(string whereCondition, Dictionary<string, object> parameterValues)
-        {
-            throw new NotImplementedException();
-        }
-
         public override string TableName => "location";
         public override string Order => "";
-
-        public override string ConnectionString
-        {
-            get => base.ConnectionString;
-            set => base.ConnectionString = value;
-        }
+        
         /// <summary>
         /// Abfrage einer einzelnen Location
         /// </summary>
@@ -78,6 +66,7 @@ namespace zbW.ProjNuGet.Repository
             }
             
         }
+        
         /// <summary>
         /// Hinzufügen einer Location
         /// </summary>
@@ -120,6 +109,7 @@ namespace zbW.ProjNuGet.Repository
                 throw e; 
             }
         }
+        
         /// <summary>
         /// Löschen einer Location
         /// </summary>
@@ -201,6 +191,11 @@ namespace zbW.ProjNuGet.Repository
             }
         }
 
+        public override long Count(string whereCondition, Dictionary<string, object> parameterValues)
+        {
+            throw new NotImplementedException();
+        }
+
         public override List<Location> GetAll(string whereCondition, Dictionary<string, object> parameterValue)
         {
             List<Location> result = new List<Location>();
@@ -255,6 +250,45 @@ namespace zbW.ProjNuGet.Repository
                     (int)reader["parent_id"], (int)reader["pod_id"]);
             }
             return new Location();
+        }
+
+        public List<Location> GetAllHirachical(int id)
+        {
+
+            List<Location> result = new List<Location>();
+            using (var con = new MySqlConnection(ConnectionString))
+            {
+                con.Open();
+                using (var cmd = con.CreateCommand())
+                {
+                    cmd.CommandText = "SELECT * FROM " + TableName + " where parent_id = " + id + ";";
+
+                    IDataReader reader = cmd.ExecuteReader();
+
+                    object[] dataRow = new object[reader.FieldCount];
+                    //----- Daten zeilenweise lesen und verarbeiten
+                    while (reader.Read())
+                    {
+                        // solange noch Daten vorhanden sind
+                        int cols = reader.GetValues(dataRow); // tatsächliches Lesen
+                        var tmp = CreateEntry(reader);
+                        try
+                        {
+                            tmp.Child = GetAllHirachical(tmp.Id);
+                        }
+                        catch (Exception e)
+                        {
+                            throw e;
+                        }
+
+                        result.Add(tmp);
+                    }
+
+                    //----- Reader schließen
+                    reader.Close();
+                    return result;
+                }
+            }
         }
     }
 }

@@ -1,23 +1,21 @@
 ﻿
 using System;
-using System.ComponentModel;
 using Prism.Commands;
 using Prism.Mvvm;
 using zbW.ProjNuGet.Properties;
-using zbW.ProjNuGet.Views;
 using UserControl = System.Windows.Controls.UserControl;
 
 namespace zbW.ProjNuGet.ViewModel
 {
-    class MainViewModel : BindableBase, INotifyPropertyChanged
+    class MainViewModel : BindableBase
     {
         private UserControl _content;
         private string _server;
         private string _db;
         private string _uid;
         private string _pwd;
-
-        public string Server
+        
+        public virtual string Server
         {
             get
             {
@@ -32,11 +30,10 @@ namespace zbW.ProjNuGet.ViewModel
             set
             {
                 _server = value;
-                NotifyPropertyChanged("Server");
-                
+               
             }
         }
-        public string Database
+        public virtual string Database
         {
             get
             {
@@ -51,11 +48,10 @@ namespace zbW.ProjNuGet.ViewModel
             set
             {
                 _db = value;
-                NotifyPropertyChanged("Database");
-                
+               
             }
         }
-        public string User
+        public virtual string User
         {
             get
             {
@@ -70,12 +66,10 @@ namespace zbW.ProjNuGet.ViewModel
             set
             {
                 _uid = value;
-                NotifyPropertyChanged("User");
-                
-
+               
             }
         }
-        public string Password
+        public virtual string Password
         {
             get
             {
@@ -90,11 +84,10 @@ namespace zbW.ProjNuGet.ViewModel
             set
             {
                 _pwd = value;
-                NotifyPropertyChanged("Password");
                
             }
         }
-
+        
         public UserControl Content
         {
             get
@@ -109,26 +102,37 @@ namespace zbW.ProjNuGet.ViewModel
 
         public MainViewModel()
         {
+            InitCred();
             LoadLogEntryView = new DelegateCommand(OnLoadEntryView);
+            LoadLocationEntryView = new DelegateCommand(OnLocationEntryView);
         }
+
+        private void InitCred()
+        {
+            Server = "";
+            Database = "";
+            User = "";
+            Password = "";
+        }
+
         public DelegateCommand LoadLogEntryView { get; internal set; }
 
-        public void NotifyPropertyChanged(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
+        public DelegateCommand LoadLocationEntryView { get; internal set; }
+        
         private void OnLoadEntryView()
         {
-            ExecuteEntryView();
+            Content = new Views.LoggingView();
         }
 
-        private void ExecuteEntryView()
+        private void OnLocationEntryView()
         {
-            Content = new Views.UserControl();
+            Content = new Views.LocationView();
         }
+        
+        public string GenerateConnentionString(String server, String db, String uid, String pwd)
+        {
+            return "Server = " + Server + "; Database = " + Database + "; Uid = " + User + ";Pwd = " + Password + ";";
+        }
+
     }
 }

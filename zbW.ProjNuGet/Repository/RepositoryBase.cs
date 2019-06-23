@@ -9,18 +9,9 @@ namespace zbW.ProjNuGet.Repository
 {
     public abstract class RepositoryBase<M> : IRepositoryBase<M>
     {
-        protected RepositoryBase()
-        {
-            this.ConnectionString = "<ConnectionString>";
-        }
-
+        
         public virtual string ConnectionString { get; set; }
-
-        public void SetConnection(string connection)
-        {
-            ConnectionString = connection;
-        }
-
+        
         public abstract M GetSingle<P>(P pkValue);
 
         public abstract void Add(M entity);
@@ -55,8 +46,7 @@ namespace zbW.ProjNuGet.Repository
                 {
                     // solange noch Daten vorhanden sind
                     int cols = reader.GetValues(dataRow); // tatsächliches Lesen 
-                    var curEntry = CreateEntry(reader);
-                    result.Add(curEntry);
+                    result.Add(CreateEntry(reader));
                 }
 
                 //----- Reader schließen
@@ -85,7 +75,6 @@ namespace zbW.ProjNuGet.Repository
 
         }
     
-
         public virtual IQueryable<M> Query(string whereCondition, Dictionary<string, object> parameterValues)
         {
             throw new NotImplementedException();
@@ -122,6 +111,7 @@ namespace zbW.ProjNuGet.Repository
         }
 
         public abstract string TableName { get; }
+
         public abstract string Order { get; }
 
         public abstract M CreateEntry(IDataReader reader);
