@@ -312,6 +312,35 @@ Nicht Implementiert !
 
 
 
+## Model's
+
+### LogEntry
+
+Ist das Datenmodel für die Logging Informationen. Das Model bietet einen "Leeren"-Konstruktor und einen spezifischen Konstruktor für die Datenbefüllung. Beide Konstruktoren benötigen keinen Confirm und Duplicate Wert, diese werden Standartmässig auf false gesetzt.
+
+#### Propertys
+
+- id:int
+- pod:string
+- location:string
+- hostname:string
+- severity:int
+- timestamp:datetime
+- confirm:bool
+- duplicate:bool
+
+### Location
+
+Ist das Datenmodel für die Location Einträge. Das Model bietet einen Konstruktor mit Standartwerten.
+
+#### Propertys
+
+- id:int
+- name:string
+- parent:int
+- pod_id:int
+- child:List<Location>
+
 ## Beispiel DB
 
 Name der Datenbank: sempro

@@ -5,7 +5,12 @@ namespace zbW.ProjNuGet.Model
 {
     class Location
     {
-       
+        private int _id;
+        private string _name;
+        private int _parent;
+        private int _pod_id;
+        private List<Location> _child;
+
         public Location(int id = default, string name = null, int parent = default, int podId = default, List<Location> child = null)
         {
             _id = id;
@@ -38,12 +43,6 @@ namespace zbW.ProjNuGet.Model
             get => _pod_id;
             set => _pod_id = value;
         }
-
-        private int _id;
-        private string _name;
-        private int _parent;
-        private int _pod_id;
-        private List<Location> _child;
         
         public List<Location> Child
         {
