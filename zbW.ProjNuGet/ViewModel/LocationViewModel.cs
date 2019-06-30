@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using Prism.Commands;
 using zbW.ProjNuGet.Model;
@@ -10,7 +11,7 @@ namespace zbW.ProjNuGet.ViewModel
 {
     class LocationViewModel : MainViewModel
     {
-        private readonly LocationRepoMySql locRepo = new LocationRepoMySql();
+        private readonly LocationRepoMySql locRepo;
         private Dictionary<string, Object> locDictionary = new Dictionary<string, object>();
         private ObservableCollection<Location> _entrys;
         private ObservableCollection<Location> _hiraEntrys;
@@ -40,13 +41,14 @@ namespace zbW.ProjNuGet.ViewModel
 
         public LocationViewModel()
         {
+            locRepo = new LocationRepoMySql(GenerateConnentionString(Server, Database, User, Password));
             InitEntrys();
             InitDictionarys();
-            ConnectExecute();
-
+            
             DeleteCommand = new DelegateCommand(DeleteExecute,CanDeleteExecute);
             AddCommand = new DelegateCommand(AddExecute);
             LoadCommand = new DelegateCommand(LoadExecute);
+            LoadExecute();
         }
 
         private bool CanDeleteExecute() => true;
@@ -80,7 +82,7 @@ namespace zbW.ProjNuGet.ViewModel
         {
             if (SelectedEntry != null)
             {
-                if (SelectedEntry.Name != null && SelectedEntry.PodId != 0)
+                if (SelectedEntry.Name != null && SelectedEntry.Pod_ID != 0)
                 {
                     try
                     {
@@ -100,7 +102,7 @@ namespace zbW.ProjNuGet.ViewModel
         {
             if (SelectedEntry != null)
             {
-                if (SelectedEntry.Name != null && SelectedEntry.PodId != 0)
+                if (SelectedEntry.Name != null && SelectedEntry.Pod_ID != 0)
                 {
                     try
                     {
@@ -122,8 +124,8 @@ namespace zbW.ProjNuGet.ViewModel
             List<Location> hiraEntries = new List<Location>();
             try
             {
-                hiraEntries = locRepo.GetAllHirachical(0);
-                entries = locRepo.GetAll();
+                hiraEntries = locRepo.GetAllHirachical(0).ToList<Location>();
+                entries = locRepo.GetAll().ToList<Location>();
             }
             catch (Exception e)
             {

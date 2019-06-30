@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using DuplicateCheckerLib;
+using LinqToDB.Mapping;
+using zbW.ProjNuGet.Model;
 
 namespace zbW.ProjNuGet
 {
-    public class LogEntry : IEntity
+    [Table("v_logentries")]
+    public class LogEntry : ModelBase
     {
         private int _id;
         private string _pod;
@@ -16,52 +19,75 @@ namespace zbW.ProjNuGet
         private bool _confirm;
         private bool _duplicate;
         
-        public int id
-        {
-            get
-            {
-                return _id;
-            }
-            set
-            {
-                _id = value; 
+        [Column("id"), PrimaryKey, NotNull]
+        public override int Id { get; set; }
 
-            }
-        }
+        [Column("pod")]
+        public string Pod { get; set; }
 
-        public string pod
-        {
-            get { return _pod; }
-            set { _pod = value; }
-        }
+        [Column("location")]
+        public string Location { get; set; }
 
-        public string location
-        {
-            get { return _location; }
-            set { _location = value; }
-        }
+        [Column("hostname")]
+        public string Hostname { get; set; }
 
-        public string hostname
-        {
-            get { return _hostname; }
-            set { _hostname = value; }
-        }
+        [Column("severity")]
+        public int Severity { get; set; }
 
-        public int severity
-        {
-            get { return _severity;}
-            set { _severity = value; }
-        }
-        public DateTime timestamp
-        {
-            get { return _timestamp;}
-            set { _timestamp = value; }
-        }
-        public string message
-        {
-            get { return _message;}
-            set { _message = value; }
-        }
+        [Column("timestamp")]
+        public DateTime Timestamp { get; set; }
+
+        [Column("message")]
+        public string Message { get; set; }
+        #region old        
+        //public int id
+        //{
+        //    get
+        //    {
+        //        return _id;
+        //    }
+        //    set
+        //    {
+        //        _id = value; 
+
+        //    }
+        //}
+
+        //public string pod
+        //{
+        //    get { return _pod; }
+        //    set { _pod = value; }
+        //}
+
+        //public string location
+        //{
+        //    get { return _location; }
+        //    set { _location = value; }
+        //}
+
+        //public string hostname
+        //{
+        //    get { return _hostname; }
+        //    set { _hostname = value; }
+        //}
+
+        //public int severity
+        //{
+        //    get { return _severity;}
+        //    set { _severity = value; }
+        //}
+        //public DateTime timestamp
+        //{
+        //    get { return _timestamp;}
+        //    set { _timestamp = value; }
+        //}
+        //public string message
+        //{
+        //    get { return _message;}
+        //    set { _message = value; }
+        //}
+        #endregion
+
         public bool confirm
         {
             get { return _confirm;}
@@ -72,37 +98,37 @@ namespace zbW.ProjNuGet
             get { return _duplicate;}
             set { _duplicate = value; }
         }
+        #region old
+        //public LogEntry(int id, string pod, string location, string hostname,
+        //    int severity, DateTime timestamp, string message)
+        //{
+        //    this._id = id;
+        //    this._pod = pod;
+        //    this._location = location;
+        //    this._hostname = hostname;
+        //    this._severity = severity;
+        //    this._timestamp = timestamp;
+        //    this._message = message;
+        //    this._confirm = false;
+        //    this._duplicate = false;
 
-        public LogEntry(int id, string pod, string location, string hostname,
-            int severity, DateTime timestamp, string message)
-        {
-            this._id = id;
-            this._pod = pod;
-            this._location = location;
-            this._hostname = hostname;
-            this._severity = severity;
-            this._timestamp = timestamp;
-            this._message = message;
-            this._confirm = false;
-            this._duplicate = false;
-            
-        }
+        //}
 
-        public LogEntry()
-        {
-            this.id = 0;
-            this.pod = "";
-            this.location = "";
-            this.hostname = "" ;
-            this.severity = 0;
-            this.timestamp = DateTime.Today;
-            this.message = "";
-            this.confirm = false;
-            this.duplicate = false;
-           
-           
-        }
+        //public LogEntry()
+        //{
+        //    this.id = 0;
+        //    this.pod = "";
+        //    this.location = "";
+        //    this.hostname = "" ;
+        //    this.severity = 0;
+        //    this.timestamp = DateTime.Today;
+        //    this.message = "";
+        //    this.confirm = false;
+        //    this.duplicate = false;
 
+
+        //}
+        #endregion
 
         /// <summary>
         /// OBJECT Equality....
@@ -119,7 +145,7 @@ namespace zbW.ProjNuGet
             if (Object.ReferenceEquals(null, logEntry)) return false;
             if (Object.ReferenceEquals(this, logEntry)) return true;
 
-            return (severity == logEntry.severity && String.Equals(message, logEntry.message));
+            return (Severity == logEntry.Severity && String.Equals(Message, logEntry.Message));
         }
 
         public override int GetHashCode()
@@ -130,8 +156,8 @@ namespace zbW.ProjNuGet
                 const int HashingMultiplier = 16777619;
 
                 int hash = HashingBase;
-                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, severity) ? severity.GetHashCode() : 0);
-                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, message) ? message.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, Severity) ? Severity.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, Message) ? Message.GetHashCode() : 0);
                 
                 return hash;
             }

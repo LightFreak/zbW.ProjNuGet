@@ -46,13 +46,14 @@ namespace GenericRepository{
         /// <param name="parameterValues">Parameter-Werte für die Wherebedingung
         /// bspw: {{"netPrice", 10.5}, {"active", true}, {"desc", "Wolle%"}}</param>
         /// <returns></returns>
-        List<M> GetAll(string whereCondition, Dictionary<string, object> parameterValues);
+
+        //IQueryable<M> GetAll(string whereCondition, Dictionary<string, object> parameterValues);
 
         /// <summary>
         /// Gibt eine Liste aller in der DB vorhandenen Model-Objekte vom Typ M zurück
         /// </summary>
         /// <returns></returns>
-        List<M> GetAll();
+        IQueryable<M> GetAll();
 
         IQueryable<M> Query(string whereCondition, Dictionary<string, object> parameterValues);
 
@@ -65,7 +66,8 @@ namespace GenericRepository{
         /// <param name="parameterValues">Parameter-Werte für die Wherebedingung
         /// bspw: {{"netPrice", 10.5}, {"active", true}, {"desc", "Wolle%"}}</param>
         /// <returns></returns>
-        long Count(string whereCondition, Dictionary<string, object> parameterValues);
+        
+            //long Count(string whereCondition, Dictionary<string, object> parameterValues);
 
         /// <summary>
         /// Zählt alle Model-Objekte vom Typ M
@@ -76,6 +78,6 @@ namespace GenericRepository{
         /// <summary>
         /// Gibt den Tabellennamen zurück, auf die sich das Repository bezieht
         /// </summary>
-        string TableName { get; }
+        //string TableName { get; }
     }
 }

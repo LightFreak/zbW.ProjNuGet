@@ -3,118 +3,174 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using GenericRepository;
-using MySql.Data.MySqlClient;
+using LinqToDB;
+using zbW.ProjNuGet.Model;
+using System.Linq.Expressions;
+using MySql.Data;
 
 namespace zbW.ProjNuGet.Repository
 {
-    public abstract class RepositoryBase<M> : IRepositoryBase<M>
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : ModelBase, new()
     {
         
         public virtual string ConnectionString { get; set; }
-        
-        public abstract M GetSingle<P>(P pkValue);
+        protected string ProviderName = "MySql.Data.MySqlClient";
+        protected string RepositoryName = "Semesterprojekt";
 
-        public abstract void Add(M entity);
-
-        public abstract void Delete(M entity);
-        
-        public abstract void Update(M entity);
-        
-        public abstract List<M> GetAll(string whereCondition, Dictionary<string, object> parameterValue);
-
-        public List<M> GetAll()
+        protected RepositoryBase(string connectionString)
         {
-            List<M> result = new List<M>();
+            this.ConnectionString = connectionString;
+        }
 
-            IDbConnection con = null; // Verbindung deklarieren
-            try
-            {
-
-                con = new MySqlConnection(ConnectionString); //Verbindung erzeugen
-
-                con.Open();
-                //----- SQL-Kommando aufbauen
-                IDbCommand cmd = con.CreateCommand();
-                cmd.CommandText = "SELECT * FROM "+ TableName + " " + Order + ";";
-                //----- SQL-Kommando ausführen; liefert einen OleDbDataReader
-                IDataReader reader = cmd.ExecuteReader();
-
-
-                object[] dataRow = new object[reader.FieldCount];
-                //----- Daten zeilenweise lesen und verarbeiten
-                while (reader.Read())
-                {
-                    // solange noch Daten vorhanden sind
-                    int cols = reader.GetValues(dataRow); // tatsächliches Lesen 
-                    result.Add(CreateEntry(reader));
-                }
-
-                //----- Reader schließen
-                reader.Close();
-                return result;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            finally
+        public T GetSingle<P>(P pkValue)
+        {
+            var result = new T();
+            using (var ctx = new LinqToDB.DataContext(ProviderName, ConnectionString))
             {
                 try
                 {
-                    if (con != null)
-                        // Verbindung schließen
-                        con.Close();
+                    result = (from e in ctx.GetTable<T>() where e.Id.Equals(pkValue) select e).FirstOrDefault();
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    throw ex;
+                    throw e;
                 }
             }
-
-            
-
+            return result;
         }
-    
-        public virtual IQueryable<M> Query(string whereCondition, Dictionary<string, object> parameterValues)
+
+        public void Add(T entity)
+        {
+            using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
+            {
+                try
+                {
+                    db.Insert<T>(entity);
+                    db.BeginTransaction();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
+
+        public void Delete(T entity)
+        {
+            using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
+            {
+                try
+                {
+                    var foundRowToEntityKey = (from e in db.GetTable<T>() where e.Id.Equals(entity.Id) select e).FirstOrDefault();
+                    if (foundRowToEntityKey != null)
+                    {
+                        db.Delete<T>(foundRowToEntityKey);
+                    }
+                    db.BeginTransaction();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
+        
+        public void Update(T entity)
+        {
+            using(var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
+            {
+                try
+                {
+                    db.Update<T>(entity);
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+        }
+        
+        public IQueryable<T> GetAll(Expression<Func<T, bool>> whereClause)
+        {
+            IQueryable<T> result = Enumerable.Empty<T>().AsQueryable();
+            using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
+            {
+                try
+                {
+                    result = db.GetTable<T>().Where<T>(whereClause);
+                    
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                return result;
+            }
+        }
+
+        public IQueryable<T> GetAll()
+        {
+            IQueryable<T> result = Enumerable.Empty<T>().AsQueryable();
+            using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
+            {
+                try
+                {
+                    result = db.GetTable<T>();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                return result;
+            }
+        }
+   
+        public virtual IQueryable<T> Query(string whereCondition, Dictionary<string, object> parameterValues)
         {
             throw new NotImplementedException();
         }
 
-        public abstract long Count(string whereCondition, Dictionary<string, object> parameterValues);
-        
-        public virtual long Count()
+        public long Count(Expression<Func<T, bool>> whereClause)
         {
-            long result = 0;
-            try
+            IQueryable<T> result = Enumerable.Empty<T>().AsQueryable();
+            using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
             {
-                using (var con = new MySqlConnection(ConnectionString))
+                try
                 {
-                    con.Open();
-                    using (var cmd = con.CreateCommand())
-                    {
-                        
-                        cmd.CommandText = "SELECT Count(*) FROM " + TableName +" order by timestamp; ";
-                        
-                        var r = cmd.ExecuteScalar();
-                        result = checked((long) r);
-                        return result;
-                    }
-
+                    result = db.GetTable<T>().Where<T>(whereClause);
                 }
-
+                catch (Exception e)
+                {
+                    throw e;
+                }
+                return result.Count();
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            
         }
 
-        public abstract string TableName { get; }
 
-        public abstract string Order { get; }
+        public virtual long Count()
+        {
+            IQueryable<T> result = Enumerable.Empty<T>().AsQueryable();
+            using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
+            {
+                try
+                {
+                    result = db.GetTable<T>();
+                }
+                catch (Exception e)
+                {
+                    throw e;
+                }
+            }
+            return result.Count();
 
-        public abstract M CreateEntry(IDataReader reader);
+        }
+
+        //public abstract string TableName { get; }
+
+        //public abstract string Order { get; }
+
+        //public abstract T CreateEntry(IDataReader reader);
 
     }
 }

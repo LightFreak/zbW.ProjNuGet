@@ -6,12 +6,13 @@ using System.Windows;
 using DuplicateCheckerLib;
 using Prism.Commands;
 using zbW.ProjNuGet.Repository;
+using MySql.Data;
 
 namespace zbW.ProjNuGet.ViewModel
 {
     internal class EntryViewModel : MainViewModel
     {
-        private readonly LoggingRepoMySql logRepo = new LoggingRepoMySql();
+        private readonly LoggingRepoMySql logRepo;
         private ObservableCollection<LogEntry> _entrys;
         private LogEntry _selectedLogEntry;
         private DuplicateChecker _dubChecker;
@@ -47,16 +48,17 @@ namespace zbW.ProjNuGet.ViewModel
         
         public EntryViewModel()
         {
+            logRepo = new LoggingRepoMySql(GenerateConnentionString(Server, Database, User, Password));
             InitEntrys();
             InitDictionarys();
-            
+           
             dubChecker = new DuplicateChecker();
             LoadCommand = new DelegateCommand(LoadExecute, CanExecuteLoadCommand);
             AddCommand = new DelegateCommand(AddExecute, CanExecuteAddCommand);
             ConfirmCommand = new DelegateCommand(ConfirmExecute, CanExecuteConfirmCommand);
             DuplicateCommand = new DelegateCommand(DuplicateExecute, CanExecuteDuplicateCommand);
             DeleteAllDuplicatesCommand = new DelegateCommand(DeleteAllDuplicatesExecute, CanExecuteDeleteCommand);
-            ConnectExecute();
+            LoadExecute();
         }
         
         private void InitEntrys()
@@ -119,26 +121,18 @@ namespace zbW.ProjNuGet.ViewModel
             if (_duplicates != null && _duplicates.Count() > 0) return true;
             return false;
         }
-
-        public void ConnectExecute()
-        {
-            connection = GenerateConnentionString(Server, Database, User, Password);
-            //locRepo.ConnectionString = connection;
-            logRepo.ConnectionString = connection;
-            LoadExecute();
-        }
-
+                
         public void LoadExecute()
         {
             var entity = new LogEntry();
             List<LogEntry> entries = new List<LogEntry>();
             try
             {
-                entries = logRepo.GetAll();
+                entries = logRepo.GetAll().ToList<LogEntry>();
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                MessageBox.Show("Datenbank Fehler: " + e.Message);
                 return;
             }
             
@@ -167,7 +161,7 @@ namespace zbW.ProjNuGet.ViewModel
         {
             if(SelectedLogEntry != null)
             {
-                if(SelectedLogEntry.timestamp != null && SelectedLogEntry.severity != 0)
+                if(SelectedLogEntry.Timestamp != null && SelectedLogEntry.Severity != 0)
                 {
                     logRepo.Add(SelectedLogEntry);
                     LoadExecute();
@@ -203,7 +197,7 @@ namespace zbW.ProjNuGet.ViewModel
 
         public void DuplicateExecute()
         {
-            _duplicates = dubChecker.FindDuplicates(Entrys);
+            _duplicates = dubChecker.FindDuplicates(Entrys.ToList<LogEntry>());
 
             if (_duplicates.Count() != 0)
             {

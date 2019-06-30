@@ -1,50 +1,32 @@
-﻿using System;
+﻿using LinqToDB.Mapping;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace zbW.ProjNuGet.Model
 {
-    class Location
+    [Table("Location")]
+    class Location : ModelBase
     {
         private int _id;
         private string _name;
         private int _parent;
         private int _pod_id;
-        private List<Location> _child;
+        private IQueryable<Location> _child;
 
-        public Location(int id = default, string name = null, int parent = default, int podId = default, List<Location> child = null)
-        {
-            _id = id;
-            _name = name;
-            _parent = parent;
-            _pod_id = podId;
-            _child = child;
-        }
+        [Column("id"), PrimaryKey, NotNull]
+        public override int Id { get; set; }
 
-        public int Id
-        {
-            get => _id;
-            set => _id = value;
-        }
+        [Column("name")]
+        public string Name { get; set; }
 
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
+        [Column("parent")]
+        public int Parent { get; set; }
 
-        public int Parent
-        {
-            get => _parent;
-            set => _parent = value;
-        }
-
-        public int PodId
-        {
-            get => _pod_id;
-            set => _pod_id = value;
-        }
-        
-        public List<Location> Child
+        [Column("pod_id")]
+        public int Pod_ID { get; set; }
+                               
+        public IQueryable<Location> Child
         {
             get => _child;
             set => _child = value;
@@ -64,7 +46,7 @@ namespace zbW.ProjNuGet.Model
             if (Object.ReferenceEquals(null, loc)) return false;
             if (Object.ReferenceEquals(this, loc)) return true;
 
-            return (String.Equals(_name, loc.Name) && _pod_id == loc.PodId);
+            return (String.Equals(_name, loc.Name) && _pod_id == loc.Pod_ID);
         }
 
         public override int GetHashCode()
@@ -76,7 +58,7 @@ namespace zbW.ProjNuGet.Model
 
                 int hash = HashingBase;
                 hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, Name) ? Name.GetHashCode() : 0);
-                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, PodId) ? PodId.GetHashCode() : 0);
+                hash = (hash * HashingMultiplier) ^ (!Object.ReferenceEquals(null, Pod_ID) ? Pod_ID.GetHashCode() : 0);
 
                 return hash;
             }
