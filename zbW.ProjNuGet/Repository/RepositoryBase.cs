@@ -6,7 +6,7 @@ using GenericRepository;
 using LinqToDB;
 using zbW.ProjNuGet.Model;
 using System.Linq.Expressions;
-using MySql.Data;
+using LinqToDB.Data;
 
 namespace zbW.ProjNuGet.Repository
 {
@@ -14,7 +14,7 @@ namespace zbW.ProjNuGet.Repository
     {
         
         public virtual string ConnectionString { get; set; }
-        protected string ProviderName = "MySql.Data.MySqlClient";
+        protected string ProviderName = "MySql";
         protected string RepositoryName = "Semesterprojekt";
 
         protected RepositoryBase(string connectionString)
@@ -39,7 +39,7 @@ namespace zbW.ProjNuGet.Repository
             return result;
         }
 
-        public void Add(T entity)
+        public virtual void Add(T entity)
         {
             using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
             {
@@ -55,7 +55,7 @@ namespace zbW.ProjNuGet.Repository
             }
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
             {
@@ -75,7 +75,7 @@ namespace zbW.ProjNuGet.Repository
             }
         }
         
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
             using(var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
             {
@@ -166,11 +166,6 @@ namespace zbW.ProjNuGet.Repository
 
         }
 
-        //public abstract string TableName { get; }
-
-        //public abstract string Order { get; }
-
-        //public abstract T CreateEntry(IDataReader reader);
-
+       
     }
 }

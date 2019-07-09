@@ -6,7 +6,6 @@ using System.Windows;
 using DuplicateCheckerLib;
 using Prism.Commands;
 using zbW.ProjNuGet.Repository;
-using MySql.Data;
 
 namespace zbW.ProjNuGet.ViewModel
 {
@@ -163,8 +162,16 @@ namespace zbW.ProjNuGet.ViewModel
             {
                 if(SelectedLogEntry.Timestamp != null && SelectedLogEntry.Severity != 0)
                 {
-                    logRepo.Add(SelectedLogEntry);
-                    LoadExecute();
+                    try
+                    {
+                        logRepo.Add(SelectedLogEntry);
+                        LoadExecute();
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Datenbank Fehler: " + e.Message);
+                        return;
+                    }
                 }
             }
             
@@ -186,7 +193,15 @@ namespace zbW.ProjNuGet.ViewModel
             {
                 foreach (var entry in toConfirm)
                 {
-                   logRepo.Delete(entry); 
+                    try
+                    {
+                        logRepo.Delete(entry);
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show("Datenbank Fehler: " + e.Message);
+                        return;
+                    }
                 }
                 
             }
@@ -238,7 +253,14 @@ namespace zbW.ProjNuGet.ViewModel
         {
             foreach (var dupl in _duplicates)
             {
+                try { 
                 logRepo.Delete((LogEntry) dupl);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Datenbank Fehler: " + e.Message);
+                    return;
+                }
             }
             if (DeleteAllDuplicatesCommand != null)
             {

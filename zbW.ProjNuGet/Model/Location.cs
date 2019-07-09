@@ -8,11 +8,8 @@ namespace zbW.ProjNuGet.Model
     [Table("Location")]
     class Location : ModelBase
     {
-        private int _id;
-        private string _name;
-        private int _parent;
-        private int _pod_id;
-        private IQueryable<Location> _child;
+        
+        private List<Location> _child;
 
         [Column("id"), PrimaryKey, NotNull]
         public override int Id { get; set; }
@@ -20,13 +17,13 @@ namespace zbW.ProjNuGet.Model
         [Column("name")]
         public string Name { get; set; }
 
-        [Column("parent")]
+        [Column("parent_id")]
         public int Parent { get; set; }
 
         [Column("pod_id")]
         public int Pod_ID { get; set; }
                                
-        public IQueryable<Location> Child
+        public List<Location> Child
         {
             get => _child;
             set => _child = value;
@@ -46,7 +43,7 @@ namespace zbW.ProjNuGet.Model
             if (Object.ReferenceEquals(null, loc)) return false;
             if (Object.ReferenceEquals(this, loc)) return true;
 
-            return (String.Equals(_name, loc.Name) && _pod_id == loc.Pod_ID);
+            return (String.Equals(Name, loc.Name) && Pod_ID == loc.Pod_ID);
         }
 
         public override int GetHashCode()

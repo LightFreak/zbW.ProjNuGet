@@ -1,10 +1,10 @@
-DROP DATABASE IF EXISTS `sempro`;
+DROP DATABASE IF EXISTS `semesterprojekt`;
 
-CREATE Database if not exists `sempro`
+CREATE Database if not exists `semesterprojekt`
 	character set utf8
     ;
     
-USE  `sempro`;
+USE  `semesterprojekt`;
 
 CREATE TABLE IF NOT EXISTS NTPServer (
 	id INT NOT NULL AUTO_INCREMENT,
@@ -598,15 +598,17 @@ drop procedure if exists LogClear;
 DELIMITER //
 
 CREATE PROCEDURE LogClear (
-IN id INT
+IN id INT,
+OUT total INT
 )
 
 proc: BEGIN
-UPDATE Logging
+UPDATE Logging 
 	SET
 		cleared=1
         WHERE Logging.id=id;
-	 
+        
+SELECT ROW_COUNT() INTO total;
 
 END //
 

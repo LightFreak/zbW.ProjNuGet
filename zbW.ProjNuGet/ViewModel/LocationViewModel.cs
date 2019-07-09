@@ -104,9 +104,22 @@ namespace zbW.ProjNuGet.ViewModel
             {
                 if (SelectedEntry.Name != null && SelectedEntry.Pod_ID != 0)
                 {
+                    bool exists = false;
+                    var tmp = locRepo.GetAll();
+                    foreach(var entity in tmp)
+                    {
+                        if (SelectedEntry.Id == entity.Id) exists = true; 
+                    }
                     try
                     {
-                        locRepo.Add(SelectedEntry);
+                        if (exists)
+                        {
+                            locRepo.Update(SelectedEntry);
+                        }
+                        else
+                        {
+                            locRepo.Add(SelectedEntry);
+                        }                        
                         LoadExecute();
                     }
                     catch (Exception e)
@@ -124,8 +137,8 @@ namespace zbW.ProjNuGet.ViewModel
             List<Location> hiraEntries = new List<Location>();
             try
             {
-                hiraEntries = locRepo.GetAllHirachical(0).ToList<Location>();
                 entries = locRepo.GetAll().ToList<Location>();
+                hiraEntries = locRepo.GetAllHirachical(0,entries).ToList<Location>();
             }
             catch (Exception e)
             {

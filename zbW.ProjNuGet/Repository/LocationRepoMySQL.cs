@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using LinqToDB;
-using MySql.Data.MySqlClient;
 using zbW.ProjNuGet.Model;
 
 namespace zbW.ProjNuGet.Repository
@@ -20,60 +19,19 @@ namespace zbW.ProjNuGet.Repository
         }
              
        
-        public IQueryable<Location> GetAllHirachical(int id)
+        public List<Location> GetAllHirachical(int id, List<Location> source)
         {
-            IQueryable<Location> list = Enumerable.Empty<Location>().AsQueryable();
-            List<Location> Hirachical;
-            using (var db = new LinqToDB.DataContext(ProviderName, ConnectionString))
+            List<Location> result = new List<Location>();
+            foreach(var entity in source)
             {
-                try
+                if(entity.Parent == id)
                 {
-                    list = (from e in db.GetTable<Location>() where e.Parent.Equals(id) select e);
-                    foreach(var entity in list)
-                    {
-                        entity.Child = GetAllHirachical(entity.Id);
-                    }
+                    entity.Child = GetAllHirachical(entity.Id, source);
+                    result.Add(entity);
                 }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-                return list;
             }
-            //List<Location> result = new List<Location>();
-            //using (var con = new MySqlConnection(ConnectionString))
-            //{
-            //    con.Open();
-            //    using (var cmd = con.CreateCommand())
-            //    {
-            //       // cmd.CommandText = "SELECT * FROM " + TableName + " where parent_id = " + id + ";";
-
-            //        IDataReader reader = cmd.ExecuteReader();
-
-            //        object[] dataRow = new object[reader.FieldCount];
-            //        //----- Daten zeilenweise lesen und verarbeiten
-            //        while (reader.Read())
-            //        {
-            //            // solange noch Daten vorhanden sind
-            //            int cols = reader.GetValues(dataRow); // tatsächliches Lesen
-            //          ////  var tmp = CreateEntry(reader);
-            //          //  try
-            //          //  {
-            //          //      tmp.Child = GetAllHirachical(tmp.Id);
-            //          //  }
-            //          //  catch (Exception e)
-            //          //  {
-            //          //      throw e;
-            //          //  }
-
-            //          //  result.Add(tmp);
-            //        }
-
-            //        //----- Reader schließen
-            //        reader.Close();
-            //        return result;
-            //    }
-            //}
+            return result;
+            
         }
     }
 }
