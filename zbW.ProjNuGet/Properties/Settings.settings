@@ -6,7 +6,7 @@
       <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="DefaultDB" Type="System.String" Scope="User">
-      <Value Profile="(Default)">semsterprojekt</Value>
+      <Value Profile="(Default)">semesterprojekt</Value>
     </Setting>
     <Setting Name="DefaultUser" Type="System.String" Scope="User">
       <Value Profile="(Default)">test</Value>

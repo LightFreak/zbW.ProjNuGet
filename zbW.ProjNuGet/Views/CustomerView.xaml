@@ -44,30 +44,39 @@
             
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Row="0" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{ Binding CustomerId, Mode=TwoWay}" VerticalAlignment="Stretch" />
-        <TextBox Grid.Row="1" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay}" VerticalAlignment="Stretch"   />
-        <TextBox Grid.Row="1" Grid.Column="4" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Prename, Mode=TwoWay}" VerticalAlignment="Stretch" />
-        <TextBox Grid.Row="2" Grid.Column="4" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Website, Mode=TwoWay}" VerticalAlignment="Stretch" />
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Phone, Mode=TwoWay}" VerticalAlignment="Stretch" />
-        <TextBox Grid.Row="3" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Email, Mode=TwoWay}" VerticalAlignment="Stretch" />
-        <TextBox Grid.Row="3" Grid.Column="4" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding CuPassword, Mode=TwoWay}" VerticalAlignment="Stretch" />
-
-        <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding StateCustomerId, NotifyOnSourceUpdated=True}"  Margin="4"></TextBox>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding CustomerId, Mode=TwoWay, NotifyOnSourceUpdated=True}" VerticalAlignment="Stretch" />
+        <TextBox Grid.Row="1" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Name, Mode=TwoWay, NotifyOnSourceUpdated=True}" VerticalAlignment="Stretch"   />
+        <TextBox Grid.Row="1" Grid.Column="4" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Prename, Mode=TwoWay, NotifyOnSourceUpdated=True}" VerticalAlignment="Stretch" />
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Phone, Mode=TwoWay, NotifyOnSourceUpdated=True}" VerticalAlignment="Stretch" />
+        <TextBox Grid.Row="2" Grid.Column="4" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Website, Mode=TwoWay, NotifyOnSourceUpdated=True}" VerticalAlignment="Stretch" />
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding Email, Mode=TwoWay, NotifyOnTargetUpdated=True}" VerticalAlignment="Stretch" />
+        <TextBox Grid.Row="3" Grid.Column="4" Margin="10 5" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="{Binding CuPassword, Mode=TwoWay, NotifyOnTargetUpdated=True}" VerticalAlignment="Stretch" />
 
         <Label Grid.Row="0" Grid.Column="0"  Margin="10 5" Content="Customer Number" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <Label Grid.Row="1" Grid.Column="0" Margin="10 5" Content="Name" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <Label Grid.Row="1" Grid.Column="3" Margin="10 5" Content="Prename" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <Label Grid.Row="2" Grid.Column="0" Margin="10 5" Content="Phone" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <Label Grid.Row="2" Grid.Column="3" Margin="10 5" Content="Website" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        <Label Grid.Row="2" Grid.Column="0" Margin="10 5" Content="Phone" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <Label Grid.Row="3" Grid.Column="0" Margin="10 5" Content="E-Mail" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
         <Label Grid.Row="3" Grid.Column="3" Margin="10 5" Content="Password" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-        <TextBox Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="10 5" Text="{Binding Notification, Mode=TwoWay, NotifyOnSourceUpdated=True}"
-               BorderBrush="Gray" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
 
-        <Button Grid.Row="4" Grid.Column="1" Margin="10 5" Content="Add" />
-        <Button Grid.Row="4" Grid.Column="2" Margin="10 5" Content="Search" />
+        <Button Grid.Row="4" Grid.Column="1" Margin="10 5" Content="Add" Command="{Binding AddCommand}"/>
+        <Button Grid.Row="4" Grid.Column="2" Margin="10 5" Content="Search" Command="{Binding SearchCommand}" />
         <Button Grid.Row="4" Grid.Column="3" Margin="10 5" Content="Delete" />
         <Button Grid.Row="4" Grid.Column="4" Margin="10 5" Content="Update" />
+        <Button Grid.Row="2" Grid.Column="2" Margin="10 5" Content="Detail" />
+
+        <DataGrid Grid.Row="5" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="6" Margin="10" AutoGenerateColumns="False" 
+                  ItemsSource="{Binding Entrys, NotifyOnSourceUpdated=True, Mode=TwoWay}" SelectedItem="{Binding SelectedCustomer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Customer_Id}" Header="Customer ID" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name"/>
+                <DataGridTextColumn Binding="{Binding Prename}" Header="Vorname" />
+                <DataGridTextColumn Binding="{Binding Phone}" Header="Telefon" />
+                <DataGridTextColumn Binding="{Binding EMail}" Header="E-Mail"/>
+                <DataGridTextColumn Binding="{Binding Website}" Header="Webseite" />
+            </DataGrid.Columns>
+        </DataGrid>
        
 
     </Grid>

@@ -98,7 +98,7 @@ namespace zbW.ProjNuGet.ViewModel
             }
         }
 
-        public void AddExecute()
+        internal void AddExecute()
         {
             if (SelectedEntry != null)
             {
