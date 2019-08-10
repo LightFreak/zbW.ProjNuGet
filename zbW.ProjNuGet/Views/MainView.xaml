@@ -23,46 +23,38 @@
     </UserControl.DataContext>
     <Grid>
       <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="10" />
-          <ColumnDefinition Width="3*" />
+          <ColumnDefinition Width="100" />
+          <ColumnDefinition Width="50" />
           <ColumnDefinition Width="1*" />
+          <ColumnDefinition Width="100" />
           <ColumnDefinition Width="1*" />
-          <ColumnDefinition Width="4*" />
-          <ColumnDefinition Width="1*" />
-          <ColumnDefinition Width="4*" />
-          <ColumnDefinition Width="1*" />
-          <ColumnDefinition Width="4*" />
-          <ColumnDefinition Width="1*" />
-          <ColumnDefinition Width="4*" />
-          <ColumnDefinition Width="10" />
-        </Grid.ColumnDefinitions>
+          </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="10" />
-            <RowDefinition Height="25" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="25" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="25" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="25" />
-            <RowDefinition Height="320" />
-            <RowDefinition Height="10" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="1*" />
+            
         </Grid.RowDefinitions>
-        <Label Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Grid.Row="1" Content="Server: " />
-        <Label Grid.Column="6" HorizontalAlignment="Right" Grid.Row="1" Content="Database: " />
-        <Label Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Grid.Row="3" Content="User: " />
-        <Label Grid.Column="6" HorizontalAlignment="Right" Grid.Row="3" Content="Password: " />
-        <TextBox Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="1" x:Name="Server" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
+        <Label Grid.Column="1" HorizontalAlignment="Right" Grid.Row="0" Content="Server: " />
+        <Label Grid.Column="3" HorizontalAlignment="Right" Grid.Row="0" Content="Database: " />
+        <Label Grid.Column="1" HorizontalAlignment="Right" Grid.Row="1" Content="User: " />
+        <Label Grid.Column="3" HorizontalAlignment="Right" Grid.Row="1" Content="Password: " />
+        <TextBox Grid.Column="2" Grid.Row="0" x:Name="Server" Margin="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
                  Text="{Binding Server, NotifyOnSourceUpdated=True, Mode=TwoWay}" />
-        <TextBox Grid.Column="7" Grid.ColumnSpan="2" Grid.Row="1" x:Name="Database" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
+        <TextBox Grid.Column="4" Grid.Row="0" x:Name="Database" Margin="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
                  Text="{Binding Database, NotifyOnSourceUpdated=True, Mode=TwoWay}" />
-        <TextBox Grid.Column="3" Grid.ColumnSpan="2" Grid.Row="3" x:Name="User" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
+        <TextBox Grid.Column="2" Grid.Row="1" x:Name="User" Margin="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
                  Text="{Binding User, NotifyOnSourceUpdated=True, Mode=TwoWay}" />
-        <TextBox Grid.Column="7" Grid.ColumnSpan="2" Grid.Row="3" x:Name="Password" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
+        <TextBox Grid.Column="4" Grid.Row="1" x:Name="Password" Margin="2" HorizontalAlignment="Stretch" TextWrapping="Wrap" 
                  Text="{Binding Password, NotifyOnSourceUpdated=True, Mode=TwoWay}"
         />
-        <Button Grid.Column="1" Grid.Row="5" Margin="2" BorderThickness="1" Content="Log Entrys" Command="{Binding LoadLogEntryView}" />
-        <Button Grid.Column="1" Grid.Row="7" Margin="2" BorderThickness="1" Content="Location Entrys" Command="{Binding LoadLocationEntryView}" />
-        <UserControl Grid.Column="2" Grid.Row="5" Grid.ColumnSpan="10" Grid.RowSpan="4" VerticalAlignment="Stretch" Background="LightGray" Margin="2" Content="{Binding Content}"  />
+        <Button Grid.Column="0" Grid.Row="2" Margin="4" BorderThickness="1" Content="Log Entrys" Command="{Binding LoadLogEntryView}" />
+        <Button Grid.Column="0" Grid.Row="3" Margin="4" BorderThickness="1" Content="Location Entrys" Command="{Binding LoadLocationEntryView}" />
+        <Button Grid.Column="0" Grid.Row="4" Margin="4" BorderThickness="1" Content="Customer" Command="{Binding LoadCustomerView}" />
+        
+        <UserControl Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="4" Grid.RowSpan="4" VerticalAlignment="Stretch" Margin="0 4 2 10" BorderThickness="1" BorderBrush="Black" Content="{Binding Content}"  />
     </Grid>
 </UserControl>

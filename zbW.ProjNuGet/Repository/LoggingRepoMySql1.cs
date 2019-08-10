@@ -48,11 +48,16 @@ namespace zbW.ProjNuGet.Repository
                 try
                 {
 
-                    var ret = db.ExecuteProc<LogEntry>("LogClear",
+                    //var ret = db.QueryProc<string>("LogClear",
+                    //new DataParameter("id", entity.Id));
+
+                    var ret = db.QueryProc<string>("LogClear",
                     new DataParameter("id", entity.Id),
-                    new DataParameter("total", null, LinqToDB.DataType.Decimal) { Direction = ParameterDirection.Output, Size = 22 });
-            
-                    decimal? total = Converter.ChangeTypeTo<decimal?>(((IDbDataParameter)db.Command.Parameters["total"]).Value);
+                    new DataParameter("@total", null, LinqToDB.DataType.Decimal) { Direction = ParameterDirection.Output, Size = 22 });
+
+                    decimal? total = Converter.ChangeTypeTo<decimal?>(((IDbDataParameter)db.Command.Parameters["@total"]).Value);
+
+                    
 
                 }
                 catch (SqlNullValueException x)

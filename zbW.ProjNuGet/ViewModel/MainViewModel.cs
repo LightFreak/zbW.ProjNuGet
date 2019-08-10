@@ -7,7 +7,7 @@ using UserControl = System.Windows.Controls.UserControl;
 
 namespace zbW.ProjNuGet.ViewModel
 {
-    class MainViewModel : BindableBase
+    internal class MainViewModel : BindableBase
     {
         private UserControl _content;
         private string _server;
@@ -105,6 +105,7 @@ namespace zbW.ProjNuGet.ViewModel
             InitCred();
             LoadLogEntryView = new DelegateCommand(OnLoadEntryView);
             LoadLocationEntryView = new DelegateCommand(OnLocationEntryView);
+            LoadCustomerView = new DelegateCommand(OnLoadCustomerView);
         }
 
         private void InitCred()
@@ -118,6 +119,8 @@ namespace zbW.ProjNuGet.ViewModel
         public DelegateCommand LoadLogEntryView { get; internal set; }
 
         public DelegateCommand LoadLocationEntryView { get; internal set; }
+
+        public DelegateCommand LoadCustomerView { get; internal set; }
         
         private void OnLoadEntryView()
         {
@@ -127,6 +130,11 @@ namespace zbW.ProjNuGet.ViewModel
         private void OnLocationEntryView()
         {
             Content = new Views.LocationView();
+        }
+
+        private void OnLoadCustomerView()
+        {
+            Content = new Views.CustomerView();
         }
         
         public string GenerateConnentionString(String server, String db, String uid, String pwd)

@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="zbW.ProjNuGet.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DefaultServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">localhost</Value>
+    </Setting>
+    <Setting Name="DefaultDB" Type="System.String" Scope="User">
+      <Value Profile="(Default)">semesterprojekt</Value>
+    </Setting>
+    <Setting Name="DefaultUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)">test</Value>
+    </Setting>
+    <Setting Name="DefaultPW" Type="System.String" Scope="User">
+      <Value Profile="(Default)">123456789</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
